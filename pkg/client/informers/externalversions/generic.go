@@ -26,6 +26,7 @@ import (
 	v1alpha1 "kubesphere.io/api/application/v1alpha1"
 	auditingv1alpha1 "kubesphere.io/api/auditing/v1alpha1"
 	clusterv1alpha1 "kubesphere.io/api/cluster/v1alpha1"
+	cnatv1alpha1 "kubesphere.io/api/cnat/v1alpha1"
 	devopsv1alpha1 "kubesphere.io/api/devops/v1alpha1"
 	v1alpha3 "kubesphere.io/api/devops/v1alpha3"
 	v1alpha2 "kubesphere.io/api/iam/v1alpha2"
@@ -86,6 +87,10 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		// Group=cluster.kubesphere.io, Version=v1alpha1
 	case clusterv1alpha1.SchemeGroupVersion.WithResource("clusters"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Cluster().V1alpha1().Clusters().Informer()}, nil
+
+		// Group=cnat.programming-kubernetes.info, Version=v1alpha1
+	case cnatv1alpha1.SchemeGroupVersion.WithResource("ats"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Cnat().V1alpha1().Ats().Informer()}, nil
 
 		// Group=devops.kubesphere.io, Version=v1alpha1
 	case devopsv1alpha1.SchemeGroupVersion.WithResource("s2ibinaries"):
