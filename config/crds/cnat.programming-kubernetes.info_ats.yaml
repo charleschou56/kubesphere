@@ -6,21 +6,20 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: ""
   creationTimestamp: null
-  name: rolebases.iam.kubesphere.io
+  name: ats.cnat.programming-kubernetes.info
 spec:
-  group: iam.kubesphere.io
+  group: cnat.programming-kubernetes.info
   names:
-    categories:
-    - iam
-    kind: RoleBase
-    listKind: RoleBaseList
-    plural: rolebases
-    singular: rolebase
-  scope: Cluster
+    kind: At
+    listKind: AtList
+    plural: ats
+    singular: at
+  scope: Namespaced
   versions:
-  - name: v1alpha2
+  - name: v1alpha1
     schema:
       openAPIV3Schema:
+        description: At runs a command at a given schedule.
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
@@ -34,12 +33,26 @@ spec:
             type: string
           metadata:
             type: object
-          role:
+          spec:
+            description: AtSpec defines the desired state of At
+            properties:
+              command:
+                description: Command is the desired command (executed in a Bash shell)
+                  to be executed.
+                type: string
+              schedule:
+                description: 'Schedule is the desired time the command is supposed
+                  to be executed. Note: the format used here is UTC time https://www.utctime.net'
+                type: string
             type: object
-            x-kubernetes-embedded-resource: true
-            x-kubernetes-preserve-unknown-fields: true
-        required:
-        - role
+          status:
+            description: AtStatus defines the observed state of At
+            properties:
+              phase:
+                description: 'Phase represents the state of the schedule: until the
+                  command is executed it is PENDING, afterwards it is DONE.'
+                type: string
+            type: object
         type: object
     served: true
     storage: true
