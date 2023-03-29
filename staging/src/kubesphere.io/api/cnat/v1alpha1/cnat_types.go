@@ -22,7 +22,6 @@ type AtSpec struct {
 	Schedule string `json:"schedule,omitempty"`
 	// Command is the desired command (executed in a Bash shell) to be executed.
 	Command string `json:"command,omitempty"`
-	// Important: Run "make" to regenerate code after modifying this file
 }
 
 // AtStatus defines the observed state of At
@@ -30,7 +29,6 @@ type AtStatus struct {
 	// Phase represents the state of the schedule: until the command is executed
 	// it is PENDING, afterwards it is DONE.
 	Phase string `json:"phase,omitempty"`
-	// Important: Run "make" to regenerate code after modifying this file
 }
 
 // +genclient
