@@ -67,6 +67,7 @@ import (
 	alertingv1 "kubesphere.io/kubesphere/pkg/kapis/alerting/v1"
 	alertingv2alpha1 "kubesphere.io/kubesphere/pkg/kapis/alerting/v2alpha1"
 	clusterkapisv1alpha1 "kubesphere.io/kubesphere/pkg/kapis/cluster/v1alpha1"
+	cnatv1alpha1 "kubesphere.io/kubesphere/pkg/kapis/cnat/v1alpha1"
 	configv1alpha2 "kubesphere.io/kubesphere/pkg/kapis/config/v1alpha2"
 	"kubesphere.io/kubesphere/pkg/kapis/crd"
 	kapisdevops "kubesphere.io/kubesphere/pkg/kapis/devops"
@@ -211,7 +212,8 @@ func (s *APIServer) installMetricsAPI() {
 
 // Install all kubesphere api groups
 // Installation happens before all informers start to cache objects, so
-//   any attempt to list objects using listers will get empty results.
+//
+//	any attempt to list objects using listers will get empty results.
 func (s *APIServer) installKubeSphereAPIs(stopCh <-chan struct{}) {
 	imOperator := im.NewOperator(s.KubernetesClient.KubeSphere(),
 		user.New(s.InformerFactory.KubeSphereSharedInformerFactory(),
@@ -270,6 +272,7 @@ func (s *APIServer) installKubeSphereAPIs(stopCh <-chan struct{}) {
 		s.KubernetesClient.KubeSphere()))
 	urlruntime.Must(notificationkapisv2beta2.AddToContainer(s.container, s.Config.NotificationOptions))
 	urlruntime.Must(gatewayv1alpha1.AddToContainer(s.container, s.Config.GatewayOptions, s.RuntimeCache, s.RuntimeClient, s.InformerFactory, s.KubernetesClient.Kubernetes(), s.LoggingClient))
+	urlruntime.Must(cnatv1alpha1.AddToContainer(s.container, s.InformerFactory.KubeSphereSharedInformerFactory()))
 }
 
 // installCRDAPIs Install CRDs to the KAPIs with List and Get options
