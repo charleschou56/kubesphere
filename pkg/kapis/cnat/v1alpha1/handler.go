@@ -20,7 +20,10 @@ func newHandler(ksInformers externalversions.SharedInformerFactory) *handler {
 
 func (h *handler) HelloCnat(request *restful.Request, response *restful.Response) {
 
-	at, err := h.atLister.Ats("default").Get("example-at")
+	namespace := "default"
+	name := "example-at"
+
+	at, err := h.atLister.Ats(namespace).Get(name)
 
 	if err != nil {
 		if errors.IsNotFound(err) {
