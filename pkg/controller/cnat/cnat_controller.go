@@ -80,9 +80,9 @@ func (r *Reconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Resu
 	// the state diagram PENDING -> RUNNING -> DONE
 	switch instance.Status.Phase {
 	case cnatv1alpha1.PhasePending:
-		klog.Infof("instance: phase=PENDING")
+		klog.Infof("instance : phase=PENDING")
 		// As long as we haven't executed the command yet,  we need to check if it's time already to act:
-		klog.Infof("instance: checking schedule %q", instance.Spec.Schedule)
+		klog.Infof("instance : checking schedule %q", instance.Spec.Schedule)
 		// Check if it's already time to execute the command with a tolerance of 2 seconds:
 		d, err := timeUntilSchedule(instance.Spec.Schedule)
 		if err != nil {
@@ -96,10 +96,10 @@ func (r *Reconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Resu
 			return ctrl.Result{RequeueAfter: d}, nil
 		}
 
-		klog.Infof("instance: it's time! Ready to execute: %s", instance.Spec.Command)
+		klog.Infof("instance : it's time! Ready to execute: %s", instance.Spec.Command)
 		instance.Status.Phase = cnatv1alpha1.PhaseRunning
 	case cnatv1alpha1.PhaseRunning:
-		klog.Infof("instance: Phase: RUNNING")
+		klog.Infof("instance : Phase: RUNNING")
 
 		pod := newPodForCR(instance)
 
@@ -115,7 +115,7 @@ func (r *Reconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Resu
 			if err != nil {
 				return ctrl.Result{}, err
 			}
-			klog.Infof("instance: pod launched: name=%s", pod.Name)
+			klog.Infof("instance : pod launched: name=%s", pod.Name)
 			instance.Status.Phase = cnatv1alpha1.PhaseDone
 		} else if err != nil {
 			// requeue with error
@@ -125,10 +125,10 @@ func (r *Reconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Resu
 			return ctrl.Result{}, nil
 		}
 	case cnatv1alpha1.PhaseDone:
-		klog.Infof("instance: phase: DONE")
+		klog.Infof("instance : phase: DONE")
 		return ctrl.Result{}, nil
 	default:
-		klog.Infof("instance: NOP")
+		klog.Infof("instance : NOP")
 		return ctrl.Result{}, nil
 	}
 
