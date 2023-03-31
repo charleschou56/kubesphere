@@ -32,6 +32,7 @@ import (
 
 	"kubesphere.io/kubesphere/cmd/controller-manager/app/options"
 	"kubesphere.io/kubesphere/pkg/controller/application"
+	"kubesphere.io/kubesphere/pkg/controller/cnat"
 	"kubesphere.io/kubesphere/pkg/controller/helm"
 	"kubesphere.io/kubesphere/pkg/controller/namespace"
 	"kubesphere.io/kubesphere/pkg/controller/openpitrix/helmapplication"
@@ -538,6 +539,12 @@ func addAllControllers(mgr manager.Manager, client k8s.Client, informerFactory i
 			}
 			addController(mgr, "notification", notificationController)
 		}
+	}
+
+	// "cnat" controller
+	if cmOptions.IsControllerEnabled("cnat") {
+		cnatReconciler := &cnat.Reconciler{}
+		addControllerWithSetup(mgr, "cnat", cnatReconciler)
 	}
 
 	// log all controllers process result
