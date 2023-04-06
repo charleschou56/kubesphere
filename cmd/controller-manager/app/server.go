@@ -31,18 +31,13 @@ import (
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
 	"sigs.k8s.io/controller-runtime/pkg/manager/signals"
-	"sigs.k8s.io/controller-runtime/pkg/webhook"
 
 	"kubesphere.io/kubesphere/cmd/controller-manager/app/options"
 	"kubesphere.io/kubesphere/pkg/apis"
 	controllerconfig "kubesphere.io/kubesphere/pkg/apiserver/config"
-	"kubesphere.io/kubesphere/pkg/controller/network/webhooks"
-	"kubesphere.io/kubesphere/pkg/controller/quota"
-	"kubesphere.io/kubesphere/pkg/controller/user"
 	"kubesphere.io/kubesphere/pkg/informers"
 	"kubesphere.io/kubesphere/pkg/simple/client/k8s"
 	"kubesphere.io/kubesphere/pkg/simple/client/s3"
-	"kubesphere.io/kubesphere/pkg/utils/metrics"
 	"kubesphere.io/kubesphere/pkg/utils/term"
 	"kubesphere.io/kubesphere/pkg/version"
 )
@@ -229,25 +224,25 @@ func run(s *options.KubeSphereControllerManagerOptions, ctx context.Context) err
 	informerFactory.Start(ctx.Done())
 
 	// Setup webhooks
-	klog.V(2).Info("setting up webhook server")
-	hookServer := mgr.GetWebhookServer()
+	// klog.V(2).Info("setting up webhook server")
+	// hookServer := mgr.GetWebhookServer()
 
-	klog.V(2).Info("registering webhooks to the webhook server")
-	hookServer.Register("/validate-email-iam-kubesphere-io-v1alpha2", &webhook.Admission{Handler: &user.EmailValidator{Client: mgr.GetClient()}})
-	hookServer.Register("/validate-network-kubesphere-io-v1alpha1", &webhook.Admission{Handler: &webhooks.ValidatingHandler{C: mgr.GetClient()}})
-	hookServer.Register("/mutate-network-kubesphere-io-v1alpha1", &webhook.Admission{Handler: &webhooks.MutatingHandler{C: mgr.GetClient()}})
-	hookServer.Register("/persistentvolumeclaims", &webhook.Admission{Handler: &webhooks.AccessorHandler{C: mgr.GetClient()}})
+	// klog.V(2).Info("registering webhooks to the webhook server")
+	// hookServer.Register("/validate-email-iam-kubesphere-io-v1alpha2", &webhook.Admission{Handler: &user.EmailValidator{Client: mgr.GetClient()}})
+	// hookServer.Register("/validate-network-kubesphere-io-v1alpha1", &webhook.Admission{Handler: &webhooks.ValidatingHandler{C: mgr.GetClient()}})
+	// hookServer.Register("/mutate-network-kubesphere-io-v1alpha1", &webhook.Admission{Handler: &webhooks.MutatingHandler{C: mgr.GetClient()}})
+	// hookServer.Register("/persistentvolumeclaims", &webhook.Admission{Handler: &webhooks.AccessorHandler{C: mgr.GetClient()}})
 
-	resourceQuotaAdmission, err := quota.NewResourceQuotaAdmission(mgr.GetClient(), mgr.GetScheme())
-	if err != nil {
-		klog.Fatalf("unable to create resource quota admission: %v", err)
-	}
-	hookServer.Register("/validate-quota-kubesphere-io-v1alpha2", &webhook.Admission{Handler: resourceQuotaAdmission})
+	// resourceQuotaAdmission, err := quota.NewResourceQuotaAdmission(mgr.GetClient(), mgr.GetScheme())
+	// if err != nil {
+	// 	klog.Fatalf("unable to create resource quota admission: %v", err)
+	// }
+	// hookServer.Register("/validate-quota-kubesphere-io-v1alpha2", &webhook.Admission{Handler: resourceQuotaAdmission})
 
-	klog.V(2).Info("registering metrics to the webhook server")
-	// Add an extra metric endpoint, so we can use the the same metric definition with ks-apiserver
-	// /kapis/metrics is independent of controller-manager's built-in /metrics
-	mgr.AddMetricsExtraHandler("/kapis/metrics", metrics.Handler())
+	// klog.V(2).Info("registering metrics to the webhook server")
+	// // Add an extra metric endpoint, so we can use the the same metric definition with ks-apiserver
+	// // /kapis/metrics is independent of controller-manager's built-in /metrics
+	// mgr.AddMetricsExtraHandler("/kapis/metrics", metrics.Handler())
 
 	klog.V(0).Info("Starting the controllers.")
 	if err = mgr.Start(ctx); err != nil {
