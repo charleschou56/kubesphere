@@ -50,7 +50,7 @@ const (
 type Controller struct {
 	// kubeclientset is a standard kubernetes clientset
 	kubeclientset kubernetes.Interface
-	// sampleclientset is a clientset for our own API group
+
 	ksClient kubesphere.Interface
 
 	atLister  cnatlisters.AtLister
