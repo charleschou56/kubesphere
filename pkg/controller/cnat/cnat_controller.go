@@ -95,7 +95,7 @@ func NewCnatController(
 	}
 
 	klog.Info("Setting up event handlers")
-	// Set up an event handler for when Foo resources change
+	// Set up an event handler for when At resources change
 	atInformer.Informer().AddEventHandler(cache.ResourceEventHandlerFuncs{
 		AddFunc: controller.enqueueAt,
 		UpdateFunc: func(old, new interface{}) {
