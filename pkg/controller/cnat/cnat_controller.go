@@ -281,7 +281,7 @@ func (c *Controller) syncHandler(key string) (time.Duration, error) {
 
 		// Try to see if the pod already exists and if not
 		// (which we expect) then create a one-shot pod as per spec:
-		found, err := c.kubeclientset.CoreV1().Pods(pod.Namespace).Get(context.TODO(), pod.Name, metav1.GetOptions{})
+		found, err := c.podLister.Pods(pod.Namespace).Get(pod.Name)
 		if err != nil && errors.IsNotFound(err) {
 			_, err = c.kubeclientset.CoreV1().Pods(pod.Namespace).Create(context.TODO(), pod, metav1.CreateOptions{})
 			if err != nil {
