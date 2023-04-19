@@ -19,7 +19,6 @@ type VirtualMachineSpec struct {
 
 // VirtualMachineStatus defines the observed state of VirtualMachine
 type VirtualMachineStatus struct {
-	Phase string `json:"phase,omitempty"`
 }
 
 // +genclient

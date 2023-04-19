@@ -41,6 +41,7 @@ import (
 	storage "kubesphere.io/kubesphere/pkg/client/informers/externalversions/storage"
 	tenant "kubesphere.io/kubesphere/pkg/client/informers/externalversions/tenant"
 	types "kubesphere.io/kubesphere/pkg/client/informers/externalversions/types"
+	virtualization "kubesphere.io/kubesphere/pkg/client/informers/externalversions/virtualization"
 )
 
 // SharedInformerOption defines the functional option type for SharedInformerFactory.
@@ -195,6 +196,7 @@ type SharedInformerFactory interface {
 	Storage() storage.Interface
 	Tenant() tenant.Interface
 	Types() types.Interface
+	Virtualization() virtualization.Interface
 }
 
 func (f *sharedInformerFactory) Application() application.Interface {
@@ -243,4 +245,8 @@ func (f *sharedInformerFactory) Tenant() tenant.Interface {
 
 func (f *sharedInformerFactory) Types() types.Interface {
 	return types.New(f, f.namespace, f.tweakListOptions)
+}
+
+func (f *sharedInformerFactory) Virtualization() virtualization.Interface {
+	return virtualization.New(f, f.namespace, f.tweakListOptions)
 }

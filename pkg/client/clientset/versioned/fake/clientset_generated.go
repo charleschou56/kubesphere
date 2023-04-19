@@ -53,6 +53,8 @@ import (
 	faketenantv1alpha2 "kubesphere.io/kubesphere/pkg/client/clientset/versioned/typed/tenant/v1alpha2/fake"
 	typesv1beta1 "kubesphere.io/kubesphere/pkg/client/clientset/versioned/typed/types/v1beta1"
 	faketypesv1beta1 "kubesphere.io/kubesphere/pkg/client/clientset/versioned/typed/types/v1beta1/fake"
+	virtualizationv1alpha1 "kubesphere.io/kubesphere/pkg/client/clientset/versioned/typed/virtualization/v1alpha1"
+	fakevirtualizationv1alpha1 "kubesphere.io/kubesphere/pkg/client/clientset/versioned/typed/virtualization/v1alpha1/fake"
 )
 
 // NewSimpleClientset returns a clientset that will respond with the provided objects.
@@ -170,4 +172,9 @@ func (c *Clientset) TenantV1alpha2() tenantv1alpha2.TenantV1alpha2Interface {
 // TypesV1beta1 retrieves the TypesV1beta1Client
 func (c *Clientset) TypesV1beta1() typesv1beta1.TypesV1beta1Interface {
 	return &faketypesv1beta1.FakeTypesV1beta1{Fake: &c.Fake}
+}
+
+// VirtualizationV1alpha1 retrieves the VirtualizationV1alpha1Client
+func (c *Clientset) VirtualizationV1alpha1() virtualizationv1alpha1.VirtualizationV1alpha1Interface {
+	return &fakevirtualizationv1alpha1.FakeVirtualizationV1alpha1{Fake: &c.Fake}
 }

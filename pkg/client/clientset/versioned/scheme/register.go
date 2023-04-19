@@ -38,6 +38,7 @@ import (
 	tenantv1alpha1 "kubesphere.io/api/tenant/v1alpha1"
 	tenantv1alpha2 "kubesphere.io/api/tenant/v1alpha2"
 	typesv1beta1 "kubesphere.io/api/types/v1beta1"
+	virtualizationv1alpha1 "kubesphere.io/api/virtualization/v1alpha1"
 )
 
 var Scheme = runtime.NewScheme()
@@ -58,6 +59,7 @@ var localSchemeBuilder = runtime.SchemeBuilder{
 	tenantv1alpha1.AddToScheme,
 	tenantv1alpha2.AddToScheme,
 	typesv1beta1.AddToScheme,
+	virtualizationv1alpha1.AddToScheme,
 }
 
 // AddToScheme adds all types of this clientset into the given scheme. This allows composition
