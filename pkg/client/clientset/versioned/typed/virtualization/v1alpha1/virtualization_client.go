@@ -27,7 +27,6 @@ import (
 type VirtualizationV1alpha1Interface interface {
 	RESTClient() rest.Interface
 	VirtualMachinesGetter
-	VirtualMachineSpecsGetter
 }
 
 // VirtualizationV1alpha1Client is used to interact with features provided by the virtualization.kubesphere.io group.
@@ -37,10 +36,6 @@ type VirtualizationV1alpha1Client struct {
 
 func (c *VirtualizationV1alpha1Client) VirtualMachines(namespace string) VirtualMachineInterface {
 	return newVirtualMachines(c, namespace)
-}
-
-func (c *VirtualizationV1alpha1Client) VirtualMachineSpecs() VirtualMachineSpecInterface {
-	return newVirtualMachineSpecs(c)
 }
 
 // NewForConfig creates a new VirtualizationV1alpha1Client for the given config.

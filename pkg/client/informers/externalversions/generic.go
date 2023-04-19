@@ -199,8 +199,6 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		// Group=virtualization.kubesphere.io, Version=v1alpha1
 	case virtualizationv1alpha1.SchemeGroupVersion.WithResource("virtualmachines"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Virtualization().V1alpha1().VirtualMachines().Informer()}, nil
-	case virtualizationv1alpha1.SchemeGroupVersion.WithResource("virtualmachinespecs"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.Virtualization().V1alpha1().VirtualMachineSpecs().Informer()}, nil
 
 	}
 

@@ -9,6 +9,12 @@ import (
 // +k8s:openapi-gen=true
 // +genclient:nonNamespaced
 
+const (
+	PhasePending = "PENDING"
+	PhaseRunning = "RUNNING"
+	PhaseDone    = "DONE"
+)
+
 // VirtualMachineSpec defines the desired state of VirtualMachine
 type VirtualMachineSpec struct {
 	// Name is the name of the VirtualMachine.
@@ -19,6 +25,7 @@ type VirtualMachineSpec struct {
 
 // VirtualMachineStatus defines the observed state of VirtualMachine
 type VirtualMachineStatus struct {
+	Phase string `json:"phase,omitempty"`
 }
 
 // +genclient

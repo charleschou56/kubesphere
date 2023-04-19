@@ -45,6 +45,9 @@ spec:
             type: object
           status:
             description: VirtualMachineStatus defines the observed state of VirtualMachine
+            properties:
+              phase:
+                type: string
             type: object
         type: object
     served: true

@@ -32,10 +32,6 @@ func (c *FakeVirtualizationV1alpha1) VirtualMachines(namespace string) v1alpha1.
 	return &FakeVirtualMachines{c, namespace}
 }
 
-func (c *FakeVirtualizationV1alpha1) VirtualMachineSpecs() v1alpha1.VirtualMachineSpecInterface {
-	return &FakeVirtualMachineSpecs{c}
-}
-
 // RESTClient returns a RESTClient that is used to communicate
 // with API server by this client implementation.
 func (c *FakeVirtualizationV1alpha1) RESTClient() rest.Interface {
