@@ -777,8 +777,9 @@ const (
 	// This label represents supported cpu features on the node
 	CPUFeatureLabel = "cpu-feature.node.kubevirt.io/"
 	// This label represents supported cpu models on the node
-	CPUModelLabel = "cpu-model.node.kubevirt.io/"
-	CPUTimerLabel = "cpu-timer.node.kubevirt.io/"
+	CPUModelLabel                  = "cpu-model.node.kubevirt.io/"
+	SupportedHostModelMigrationCPU = "cpu-model-migration.node.kubevirt.io/"
+	CPUTimerLabel                  = "cpu-timer.node.kubevirt.io/"
 	// This label represents supported HyperV features on the node
 	HypervLabel = "hyperv.node.kubevirt.io/"
 	// This label represents vendor of cpu model on the node
@@ -812,11 +813,6 @@ const (
 	// This exists for functional testing
 	MigrationPendingPodTimeoutSecondsAnnotation string = "kubevirt.io/migrationPendingPodTimeoutSeconds"
 
-	// CustomLibvirtLogFiltersAnnotation can be used to customized libvirt log filters. Example value could be
-	// "3:remote 4:event 3:util.json 3:util.object 3:util.dbus 3:util.netlink 3:node_device 3:rpc 3:access 1:*".
-	// For more info: https://libvirt.org/kbase/debuglogs.html
-	CustomLibvirtLogFiltersAnnotation string = "kubevirt.io/libvirt-log-filters"
-
 	// RealtimeLabel marks the node as capable of running realtime workloads
 	RealtimeLabel string = "kubevirt.io/realtime"
 
@@ -833,11 +829,8 @@ const (
 	// SEVLabel marks the node as capable of running workloads with SEV
 	SEVLabel string = "kubevirt.io/sev"
 
-	// FlavorAnnotation is the name of a VirtualMachineFlavor
-	FlavorAnnotation string = "kubevirt.io/flavor-name"
-
-	// ClusterFlavorAnnotation is the name of a VirtualMachineClusterFlavor
-	ClusterFlavorAnnotation string = "kubevirt.io/cluster-flavor-name"
+	// VirtualMachineNameLabel is the name of the Virtual Machine
+	VirtualMachineNameLabel string = "vm.kubevirt.io/name"
 )
 
 func NewVMI(name string, uid types.UID) *VirtualMachineInstance {
@@ -1447,8 +1440,6 @@ const (
 	CacheNone DriverCache = "none"
 	// CacheWriteThrough - I/O from the guest is cached on the host but written through to the physical medium.
 	CacheWriteThrough DriverCache = "writethrough"
-	// CacheWriteBack - I/O from the guest is cached on the host.
-	CacheWriteBack DriverCache = "writeback"
 
 	// IOThreads - User mode based threads with a shared lock that perform I/O tasks. Can impact performance but offers
 	// more predictable behaviour. This method is also takes fewer CPU cycles to submit I/O requests.

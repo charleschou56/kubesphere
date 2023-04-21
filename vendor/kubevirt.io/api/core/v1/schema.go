@@ -506,9 +506,6 @@ type GPU struct {
 	Name              string       `json:"name"`
 	DeviceName        string       `json:"deviceName"`
 	VirtualGPUOptions *VGPUOptions `json:"virtualGPUOptions,omitempty"`
-	// If specified, the virtual network interface address and its tag will be provided to the guest via config drive
-	// +optional
-	Tag string `json:"tag,omitempty"`
 }
 
 type VGPUOptions struct {
@@ -530,9 +527,6 @@ type HostDevice struct {
 	Name string `json:"name"`
 	// DeviceName is the resource name of the host device exposed by a device plugin
 	DeviceName string `json:"deviceName"`
-	// If specified, the virtual network interface address and its tag will be provided to the guest via config drive
-	// +optional
-	Tag string `json:"tag,omitempty"`
 }
 
 type Disk struct {
