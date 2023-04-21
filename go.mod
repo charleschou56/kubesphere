@@ -597,8 +597,7 @@ replace (
 	github.com/opencontainers/image-spec => github.com/opencontainers/image-spec v1.0.1
 	github.com/opencontainers/runc => github.com/opencontainers/runc v0.1.1
 	github.com/openshift/api => github.com/openshift/api v0.0.0-20221013123532-e8b83ffadbab
-	github.com/openshift/client-go => github.com/openshift/client-go v0.0.0-20210831095141-e19a065e79f7
-	github.com/openshift/client-go v0.0.0 => github.com/openshift/client-go v0.0.0-20211209144617-7385dd6338e3
+	github.com/openshift/client-go v0.0.0 => github.com/openshift/client-go v0.0.0-20210112165513-ebc401615f47
 	github.com/opentracing-contrib/go-grpc => github.com/opentracing-contrib/go-grpc v0.0.0-20180928155321-4b5a12d3ff02
 	github.com/opentracing-contrib/go-observer => github.com/opentracing-contrib/go-observer v0.0.0-20170622124052-a52f23424492
 	github.com/opentracing-contrib/go-stdlib => github.com/opentracing-contrib/go-stdlib v0.0.0-20190519235532-cf7a6c988dc9

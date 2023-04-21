@@ -674,8 +674,8 @@ github.com/opencontainers/runc v0.1.1/go.mod h1:qT5XzbpPznkRYVz/mWwUaVBUv2rmF59P
 github.com/openshift/api v0.0.0-20221013123532-e8b83ffadbab h1:etCoa/0/m717KBtimv733KDLGQZozAEDi5TiMu4e0ws=
 github.com/openshift/api v0.0.0-20221013123532-e8b83ffadbab/go.mod h1:RsQCVJu4qhUawxxDP7pGlwU3IA4F01wYm3qKEu29Su8=
 github.com/openshift/build-machinery-go v0.0.0-20210712174854-1bb7fd1518d3/go.mod h1:b1BuldmJlbA/xYtdZvKi+7j5YGB44qJUJDZ9zwiNCfE=
-github.com/openshift/client-go v0.0.0-20211209144617-7385dd6338e3 h1:SG1aqwleU6bGD0X4mhkTNupjVnByMYYuW4XbnCPavQU=
-github.com/openshift/client-go v0.0.0-20211209144617-7385dd6338e3/go.mod h1:cwhyki5lqBmrT0m8Im+9I7PGFaraOzcYPtEz93RcsGY=
+github.com/openshift/client-go v0.0.0-20210112165513-ebc401615f47 h1:+TEY29DK0XhqB7HFC9OfV8qf3wffSyi7MWv3AP28DGQ=
+github.com/openshift/client-go v0.0.0-20210112165513-ebc401615f47/go.mod h1:u7NRAjtYVAKokiI9LouzTv4mhds8P4S1TwdVAfbjKSk=
 github.com/openshift/custom-resource-status v0.0.0-20200602122900-c002fd1547ca h1:F1MEnOMwSrTA0YAkO0he9ip9w0JhYzI/iCB2mXmaSPg=
 github.com/openshift/custom-resource-status v0.0.0-20200602122900-c002fd1547ca/go.mod h1:GDjWl0tX6FNIj82vIxeudWeSx2Ff6nDZ8uJn0ohUFvo=
 github.com/openshift/prom-label-proxy v0.1.1-0.20191016113035-b8153a7f39f1/go.mod h1:p5MuxzsYP1JPsNGwtjtcgRHHlGziCJJfztff91nNixw=
