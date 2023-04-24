@@ -103,7 +103,7 @@ func (r *Reconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Resu
 			break
 		}
 
-		createVM(virtClient, namespace)
+		createVirtualMachine(virtClient, namespace, vm_instance)
 
 		vm_instance.Status.Phase = vlzv1alpha1.PhaseDone
 	case vlzv1alpha1.PhaseDone:
@@ -126,7 +126,7 @@ func (r *Reconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Resu
 
 }
 
-func createVM(virtClient kubecli.KubevirtClient, namespace string) error {
+func createVirtualMachine(virtClient kubecli.KubevirtClient, namespace string, vm_instance *vlzv1alpha1.VirtualMachine) error {
 
 	running := true
 	vm := &kvapi.VirtualMachine{
@@ -134,7 +134,7 @@ func createVM(virtClient kubecli.KubevirtClient, namespace string) error {
 			Kind: "VirtualMachine",
 		},
 		ObjectMeta: k8smetav1.ObjectMeta{
-			Name:      "testvm1",
+			Name:      vm_instance.Spec.Name,
 			Namespace: namespace,
 		},
 		Spec: kvapi.VirtualMachineSpec{
@@ -144,7 +144,7 @@ func createVM(virtClient kubecli.KubevirtClient, namespace string) error {
 					Domain: kvapi.DomainSpec{
 						Resources: kvapi.ResourceRequirements{
 							Requests: corev1.ResourceList{
-								corev1.ResourceMemory: resource.MustParse("64M"),
+								corev1.ResourceMemory: resource.MustParse(vm_instance.Spec.Memory),
 							},
 						},
 						Devices: kvapi.Devices{
