@@ -18,7 +18,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
 	"k8s.io/apimachinery/pkg/api/resource"
-	k8smetav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kvapi "kubevirt.io/api/core/v1"
 	"kubevirt.io/client-go/kubecli"
 
@@ -130,10 +130,10 @@ func createVirtualMachine(virtClient kubecli.KubevirtClient, namespace string, v
 
 	running := true
 	vm := &kvapi.VirtualMachine{
-		TypeMeta: k8smetav1.TypeMeta{
+		TypeMeta: metav1.TypeMeta{
 			Kind: "VirtualMachine",
 		},
-		ObjectMeta: k8smetav1.ObjectMeta{
+		ObjectMeta: metav1.ObjectMeta{
 			Name:      vm_instance.Spec.Name,
 			Namespace: namespace,
 		},
@@ -182,7 +182,7 @@ func createVirtualMachine(virtClient kubecli.KubevirtClient, namespace string, v
 	}
 
 	for {
-		vm, err := virtClient.VirtualMachine(createdVM.Namespace).Get(createdVM.Name, &k8smetav1.GetOptions{})
+		vm, err := virtClient.VirtualMachine(createdVM.Namespace).Get(createdVM.Name, &metav1.GetOptions{})
 		if err != nil {
 			klog.Infof(err.Error())
 			return err
@@ -199,4 +199,10 @@ func createVirtualMachine(virtClient kubecli.KubevirtClient, namespace string, v
 	}
 
 	return nil
+}
+
+// IsDeletionCandidate checks if object is candidate to be deleted
+func IsDeletionCandidate(obj metav1.Object, finalizer string) bool {
+	return obj.GetDeletionTimestamp() != nil && ContainsString(obj.GetFinalizers(),
+		finalizer, nil)
 }
