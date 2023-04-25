@@ -15,6 +15,7 @@ import (
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/controller"
+	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
 	"k8s.io/apimachinery/pkg/api/resource"
@@ -71,51 +72,45 @@ func (r *Reconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Resu
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
 
-	// Clone because the original object is owned by the lister.
 	vm_instance := vm.DeepCopy()
 
-	// If no phase set, default to pending (the initial phase):
-	if vm_instance.Status.Phase == "" {
-		vm_instance.Status.Phase = vlzv1alpha1.PhasePending
+	clientConfig := kubecli.DefaultClientConfig(&pflag.FlagSet{})
+
+	// retrive default namespace.
+	namespace, _, err := clientConfig.Namespace()
+	if err != nil {
+		klog.Infof("=== error in namespace : %v\n", err.Error())
+		return ctrl.Result{}, err
 	}
 
-	switch vm_instance.Status.Phase {
-	case vlzv1alpha1.PhasePending:
-		klog.Infof("instance : phase=PENDING")
+	// get the kubevirt client, using which kubevirt resources can be managed.
+	virtClient, err := kubecli.GetKubevirtClientFromClientConfig(clientConfig)
+	if err != nil {
+		klog.Infof("=== cannot obtain KubeVirt client: %v\n", err)
+		return ctrl.Result{}, err
+	}
 
-		vm_instance.Status.Phase = vlzv1alpha1.PhaseRunning
-	case vlzv1alpha1.PhaseRunning:
-		klog.Infof("instance : phase=RUNNING")
-
-		clientConfig := kubecli.DefaultClientConfig(&pflag.FlagSet{})
-
-		// retrive default namespace.
-		namespace, _, err := clientConfig.Namespace()
-		if err != nil {
-			klog.Infof("error in namespace : %v\n", err.Error())
-			break
+	if IsDeletionCandidate(vm_instance, vlzv1alpha1.VirtualMachineFinalizer) {
+		klog.Infof("=== deleting VirtualMachine %s/%s", req.Namespace, req.Name)
+		if err := deleteVirtualMachine(virtClient, namespace, vm_instance); err != nil {
+			return ctrl.Result{}, err
 		}
 
-		// get the kubevirt client, using which kubevirt resources can be managed.
-		virtClient, err := kubecli.GetKubevirtClientFromClientConfig(clientConfig)
-		if err != nil {
-			klog.Infof("cannot obtain KubeVirt client: %v\n", err)
-			break
+		if err := r.removeFinalizer(vm_instance); err != nil {
+			return ctrl.Result{}, err
+		}
+	}
+
+	if NeedToAddFinalizer(vm_instance, vlzv1alpha1.VirtualMachineFinalizer) {
+		klog.Infof("=== adding finalizer for VirtualMachine %s/%s", req.Namespace, req.Name)
+		if err := r.addFinalizer(vm_instance); err != nil {
+			return ctrl.Result{}, err
 		}
 
 		createVirtualMachine(virtClient, namespace, vm_instance)
-
-		vm_instance.Status.Phase = vlzv1alpha1.PhaseDone
-	case vlzv1alpha1.PhaseDone:
-		klog.Infof("instance : phase=DONE")
-
-		vm_instance.Status.Phase = vlzv1alpha1.PhaseDone
-	default:
-
 	}
 
 	if !reflect.DeepEqual(vm, vm_instance) {
-		// Update the At instance, setting the status to the respective phase:
 		if err := r.Update(rootCtx, vm_instance); err != nil {
 			return ctrl.Result{}, err
 		}
@@ -124,6 +119,31 @@ func (r *Reconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Resu
 	r.Recorder.Event(vm, corev1.EventTypeNormal, successSynced, messageResourceSynced)
 	return ctrl.Result{}, nil
 
+}
+
+func (c *Reconciler) addFinalizer(virtualmachine *vlzv1alpha1.VirtualMachine) error {
+	clone := virtualmachine.DeepCopy()
+	controllerutil.AddFinalizer(clone, vlzv1alpha1.VirtualMachineFinalizer)
+
+	err := c.Update(context.Background(), clone)
+	if err != nil {
+		klog.V(3).Infof("Error adding  finalizer to virtualmachine %s: %v", virtualmachine.Name, err)
+		return err
+	}
+	klog.V(3).Infof("Added finalizer to virtualmachine %s", virtualmachine.Name)
+	return nil
+}
+
+func (c *Reconciler) removeFinalizer(virtualmachine *vlzv1alpha1.VirtualMachine) error {
+	clone := virtualmachine.DeepCopy()
+	controllerutil.RemoveFinalizer(clone, vlzv1alpha1.VirtualMachineFinalizer)
+	err := c.Update(context.Background(), clone)
+	if err != nil {
+		klog.V(3).Infof("Error removing  finalizer from virtualmachine %s: %v", virtualmachine.Name, err)
+		return err
+	}
+	klog.V(3).Infof("Removed protection finalizer from virtualmachine %s", virtualmachine.Name)
+	return nil
 }
 
 func createVirtualMachine(virtClient kubecli.KubevirtClient, namespace string, vm_instance *vlzv1alpha1.VirtualMachine) error {
@@ -201,8 +221,37 @@ func createVirtualMachine(virtClient kubecli.KubevirtClient, namespace string, v
 	return nil
 }
 
+func deleteVirtualMachine(virtClient kubecli.KubevirtClient, namespace string, vm_instance *vlzv1alpha1.VirtualMachine) error {
+	err := virtClient.VirtualMachine(namespace).Delete(vm_instance.Name, &metav1.DeleteOptions{})
+	if err != nil {
+		klog.Infof(err.Error())
+		return err
+	}
+	return nil
+}
+
 // IsDeletionCandidate checks if object is candidate to be deleted
 func IsDeletionCandidate(obj metav1.Object, finalizer string) bool {
 	return obj.GetDeletionTimestamp() != nil && ContainsString(obj.GetFinalizers(),
 		finalizer, nil)
+}
+
+// NeedToAddFinalizer checks if need to add finalizer to object
+func NeedToAddFinalizer(obj metav1.Object, finalizer string) bool {
+	return obj.GetDeletionTimestamp() == nil && !ContainsString(obj.GetFinalizers(),
+		finalizer, nil)
+}
+
+// ContainsString checks if a given slice of strings contains the provided string.
+// If a modifier func is provided, it is called with the slice item before the comparation.
+func ContainsString(slice []string, s string, modifier func(s string) string) bool {
+	for _, item := range slice {
+		if item == s {
+			return true
+		}
+		if modifier != nil && modifier(item) == s {
+			return true
+		}
+	}
+	return false
 }

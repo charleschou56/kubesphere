@@ -15,6 +15,8 @@ const (
 	PhaseDone    = "DONE"
 )
 
+const VirtualMachineFinalizer = "finalizers.virtualization.kubesphere.io/virtualmachine"
+
 // VirtualMachineSpec defines the desired state of VirtualMachine
 type VirtualMachineSpec struct {
 	// Name is the name of the VirtualMachine.
