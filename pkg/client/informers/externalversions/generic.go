@@ -38,6 +38,7 @@ import (
 	tenantv1alpha1 "kubesphere.io/api/tenant/v1alpha1"
 	tenantv1alpha2 "kubesphere.io/api/tenant/v1alpha2"
 	v1beta1 "kubesphere.io/api/types/v1beta1"
+	virtualizationv1alpha1 "kubesphere.io/api/virtualization/v1alpha1"
 )
 
 // GenericInformer is type of SharedIndexInformer which will locate and delegate to other
@@ -199,6 +200,10 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Types().V1beta1().FederatedServices().Informer()}, nil
 	case v1beta1.SchemeGroupVersion.WithResource("federatedstatefulsets"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Types().V1beta1().FederatedStatefulSets().Informer()}, nil
+
+		// Group=virtualization.kubesphere.io, Version=v1alpha1
+	case virtualizationv1alpha1.SchemeGroupVersion.WithResource("virtualmachines"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Virtualization().V1alpha1().VirtualMachines().Informer()}, nil
 
 	}
 
