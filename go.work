@@ -1,0 +1,6 @@
+go 1.20
+
+use (
+	./staging/src/kubesphere.io/api
+	./staging/src/kubesphere.io/client-go
+)
