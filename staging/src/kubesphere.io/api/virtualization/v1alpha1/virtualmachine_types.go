@@ -33,7 +33,6 @@ type DiskVolumeTemplateStatus struct {
 }
 
 type DiskVolumeTemplate struct {
-	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
 	Spec   DiskVolumeTemplateSpec   `json:"spec,omitempty"`
