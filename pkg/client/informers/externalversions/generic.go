@@ -28,6 +28,7 @@ import (
 	clusterv1alpha1 "kubesphere.io/api/cluster/v1alpha1"
 	devopsv1alpha1 "kubesphere.io/api/devops/v1alpha1"
 	v1alpha3 "kubesphere.io/api/devops/v1alpha3"
+	gatewayv1alpha1 "kubesphere.io/api/gateway/v1alpha1"
 	v1alpha2 "kubesphere.io/api/iam/v1alpha2"
 	networkv1alpha1 "kubesphere.io/api/network/v1alpha1"
 	v2beta1 "kubesphere.io/api/notification/v2beta1"
@@ -102,6 +103,10 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Devops().V1alpha3().DevOpsProjects().Informer()}, nil
 	case v1alpha3.SchemeGroupVersion.WithResource("pipelines"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Devops().V1alpha3().Pipelines().Informer()}, nil
+
+		// Group=gateway, Version=v1alpha1
+	case gatewayv1alpha1.SchemeGroupVersion.WithResource("gateways"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Gateway().V1alpha1().Gateways().Informer()}, nil
 
 		// Group=iam.kubesphere.io, Version=v1alpha2
 	case v1alpha2.SchemeGroupVersion.WithResource("globalroles"):
