@@ -47,12 +47,26 @@ spec:
                       metadata:
                         type: object
                       spec:
+                        description: DiskVolumeSpec is the spec for a DiskVolume resource
                         properties:
                           resources:
+                            description:
+                              Resources represents the minimum resources
+                              the volume should have.
                             properties:
                               requests:
                                 properties:
                                   storage:
+                                    type: string
+                                type: object
+                            type: object
+                          source:
+                            properties:
+                              image:
+                                properties:
+                                  name:
+                                    type: string
+                                  namespace:
                                     type: string
                                 type: object
                             type: object
@@ -61,6 +75,72 @@ spec:
                         type: object
                     type: object
                   type: array
+                diskVolumes:
+                  description: DiskVolume is the name of the DiskVolume.
+                  items:
+                    type: string
+                  type: array
+                hardware:
+                  description: Hardware is the hardware of the VirtualMachine.
+                  properties:
+                    domain:
+                      properties:
+                        cpu:
+                          properties:
+                            cores:
+                              format: int32
+                              type: integer
+                          type: object
+                        devices:
+                          properties:
+                            interfaces:
+                              items:
+                                properties:
+                                  macvtap:
+                                    type: object
+                                  name:
+                                    type: string
+                                type: object
+                              type: array
+                          type: object
+                        resources:
+                          properties:
+                            limits:
+                              properties:
+                                memory:
+                                  type: string
+                              type: object
+                          type: object
+                      type: object
+                    evictionStrategy:
+                      type: string
+                    hostname:
+                      type: string
+                    networks:
+                      items:
+                        properties:
+                          multus:
+                            properties:
+                              networkName:
+                                type: string
+                            type: object
+                          name:
+                            type: string
+                        type: object
+                      type: array
+                    volumes:
+                      items:
+                        properties:
+                          cloudInitNoCloud:
+                            properties:
+                              userDataBase64:
+                                type: string
+                            type: object
+                          name:
+                            type: string
+                        type: object
+                      type: array
+                  type: object
                 memory:
                   description: Memory is the memory of the VirtualMachine.
                   type: string
